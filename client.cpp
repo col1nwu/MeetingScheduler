@@ -1,3 +1,5 @@
+#include "utils.h"
+
 #include <arpa/inet.h>
 #include <cstdlib>
 #include <cstring>
@@ -9,47 +11,27 @@
 
 using namespace std;
 
-const char* IP_ADDR = "127.0.0.1";
+const string IP_ADDR = "127.0.0.1";
 const int PORT_TCP = 24092;
 
-int init_tcp_sock() {
+int init_tcp_sock(string ip_addr, int port_num)
+{
 	int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sock_fd < 0)
-	{
-		cerr << "[Client] Cannot initailze TCP socket..." << endl;
-		exit(1);
-	}
 
-	struct sockaddr_in addr_serverM_tcp;
-	memset(&addr_serverM_tcp, 0, sizeof(addr_serverM_tcp));
-	addr_serverM_tcp.sin_family = AF_INET;
-	addr_serverM_tcp.sin_addr.s_addr = inet_addr(IP_ADDR);
-	addr_serverM_tcp.sin_port = htons(PORT_TCP);
+	struct sockaddr_in addr;
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr(ip_addr.c_str());
+	addr.sin_port = htons(port_num);
 
-	int conn_fd = connect(sock_fd, (struct sockaddr *) &addr_serverM_tcp, sizeof(addr_serverM_tcp));
-	if (conn_fd < 0)
-	{
-		cerr << "[Client] Cannot connect to Main Server..." << endl;
-		exit(1);
-	}
+	connect(sock_fd, (struct sockaddr *) &addr, sizeof(addr));
 
 	return sock_fd;
 }
 
-void send_msg(int sock_fd, string msg)
-{
-	int nbytes = send(sock_fd, msg.c_str(), msg.length(), 0);
-	if (nbytes < 0)
-	{
-		cerr << "[Client] Cannot send message to Main Server..." << endl;
-		close(sock_fd);
-	}
-	cout << "Client finished sending the usernames to Main Server." << endl;
-}
-
 int main(int argc, char *argv[])
 {
-	int sock_fd = init_tcp_sock();
+	int sock_fd = init_tcp_sock(IP_ADDR, PORT_TCP);
 
 	cout << "Client is up and running." << endl;
 
@@ -59,7 +41,17 @@ int main(int argc, char *argv[])
 		string inp;
 		getline(cin, inp);
 
-		send_msg(sock_fd, inp);
+		send_msg_tcp(sock_fd, inp);
+		cout << "Client finished sending the usernames to Main Server." << endl;
+
+		vector<string> msg_port = recv_msg_tcp(sock_fd);
+		if (msg_port[0][0] != '[')
+		{
+			cout << "Client received the reply from Main Server using TCP over port " << msg_port[1] << ": ";
+			cout << msg_port[0] << " do not exist." << endl;
+			msg_port = recv_msg_tcp(sock_fd);
+		}
+		cout << "Client received the reply from Main Server using TCP over port " << msg_port[1] << ": ";
 
 		cout << "-----Start a new request-----" << endl;
 	}
