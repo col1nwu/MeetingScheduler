@@ -1,16 +1,14 @@
 CC = g++
-CFLAGES = -g -Wall
+CFLAGS = -g -Wall -std=c++11
 
-all: client serverM serverA
+SRCS = client.cpp serverM.cpp serverA.cpp
+OBJS = $(SRCS:.cpp=)
 
-client: client.cpp
-	$(CC) $(CFLAGES) $? -o $@
+all: $(OBJS) $(UTILS)
 
-serverM: serverM.cpp
-	$(CC) $(CFLAGES) $? -o $@
-
-serverA: serverA.cpp
-	$(CC) $(CFLAGES) $? -o $@
+%: %.cpp
+	$(CC) $(CFLAGS) $< utils.cpp -o $@
+	chmod u+x $@
 
 clean:
-	rm -rf client serverM serverA
+	rm -f $(OBJS)
