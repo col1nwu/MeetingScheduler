@@ -1,5 +1,6 @@
 #include "utils.h"
 
+#include <algorithm>
 #include <arpa/inet.h>
 #include <cstdlib>
 #include <cstring>
@@ -15,6 +16,23 @@
 #include <vector>
 
 using namespace std;
+
+string recv_msg(int sock_fd)
+{
+	char buffer[1024];
+
+	struct sockaddr_in addr_rmt;
+	socklen_t len_rmt = sizeof(addr_rmt);
+	int len_resp = recvfrom(sock_fd, buffer, sizeof(buffer), 0, (struct sockaddr *) &addr_rmt, &len_rmt);
+	if (len_resp > 0)
+	{
+		buffer[len_resp] = '\0';
+		return string(buffer);
+	}
+	else if (len_resp < 0) cout << "Error in receiving message..." << endl;
+
+	return "";
+}
 
 /*
 -------------------------------------------------
@@ -48,18 +66,6 @@ struct sockaddr_in init_dest_addr_udp(string ip_addr, int port_num)
 	return dest_addr;
 }
 
-string recv_msg_udp(int sock_fd)
-{
-	char buffer[1024];
-
-	struct sockaddr_in addr_sndr;
-	socklen_t len_sndr = sizeof(addr_sndr);
-	int len_resp = recvfrom(sock_fd, buffer, sizeof(buffer), 0, (struct sockaddr *) &addr_sndr, &len_sndr);
-	buffer[len_resp] = '\0';
-
-	return string(buffer);
-}
-
 void send_msg_udp(int sock_fd, struct sockaddr_in addr_dest, string msg)
 {
 	// can use a variable to contain the result
@@ -80,29 +86,6 @@ int acpt_tcp_conn(int sock_fd_loc)
 	int sock_fd = accept(sock_fd_loc, (struct sockaddr *) &addr_rmt, &len_rmt);
 
 	return sock_fd;
-}
-
-vector<string> recv_msg_tcp(int sock_fd)
-{
-	vector<string> a;
-
-	char buffer[1024];
-	struct sockaddr_in addr_rmt;
-	socklen_t len_rmt = sizeof(addr_rmt);
-	int len_resp = recvfrom(sock_fd, buffer, sizeof(buffer), 0, (struct sockaddr *) &addr_rmt, &len_rmt);
-	if (len_resp > 0)
-	{
-		buffer[len_resp] = '\0';
-		string resp = string(buffer);
-		a.push_back(resp);
-
-		char ip_rmt[INET_ADDRSTRLEN];
-		inet_ntop(AF_INET, &addr_rmt.sin_addr, ip_rmt, INET_ADDRSTRLEN);
-		int port_rmt = ntohs(addr_rmt.sin_port);
-		a.push_back(to_string(port_rmt));
-	}
-
-	return a;
 }
 
 void send_msg_tcp(int sock_fd, string msg)
@@ -168,13 +151,97 @@ string vec_to_str(vector<string> strs, string x)
 	return a;
 }
 
+/*
+-------------------------------------------------
+        Interval Intersection Alogorithm
+-------------------------------------------------
+*/
+
+struct ts
+{
+	int start;
+	int end;
+};
+
+bool comp_ts(ts ts1, ts ts2)
+{
+	return ts1.start < ts2.start;
+}
+
+vector<ts> str_to_ts(string str)
+{
+	string nums_str;
+	for (char a : str)
+	{
+		if (a == '[' || a == ']') continue;
+		if (a == ',') nums_str += ' ';
+		else nums_str += a;
+	}
+	vector<string> nums = split_str(nums_str, ' ');
+	vector<ts> tss;
+	size_t i = 0;
+	while (i < nums.size())
+	{
+		tss.push_back({stoi(nums[i]), stoi(nums[++i])});
+		++i;
+	}
+	return tss;
+}
+
+string ts_to_str(vector<ts> tss)
+{
+	int n = tss.size();
+	string str = "[";
+	for (int i = 0; i < n; i++)
+	{
+		str += "[";
+		str += to_string(tss[i].start);
+		str += ",";
+		str += to_string(tss[i].end);
+		str += "]";
+		if (i < n - 1) str += ",";
+	}
+	str += "]";
+	return str;
+}
+
+string find_intxn(string avals1, string avals2)
+{
+	vector<ts> intxns;
+	vector<ts> tss1 = str_to_ts(avals1), tss2 = str_to_ts(avals2);
+	
+	size_t i = 0, j = 0;
+	while (i < tss1.size() && j < tss2.size())
+	{
+		int start = max(tss1[i].start, tss2[j].start);
+		int end = min(tss1[i].end, tss2[j].end);
+		if (start < end) intxns.push_back({start, end});
+		if (tss1[i].end < tss2[j].end) ++i;
+		else ++j;
+	}
+
+	return ts_to_str(intxns);
+}
+
+string find_intxn(vector<string> avals)
+{
+	int n = avals.size();
+	if (n == 0) return "[]";
+	if (n == 1) return avals[0];
+	string tmp = find_intxn(avals[0], avals[1]);
+	for (int i = 2; i < n; i++)
+	{
+		tmp = find_intxn(tmp, avals[i]);
+	}
+	return tmp;
+}
+
 // int main()
 // {
-// 	string a = "123 34 35 23 12";
-// 	vector<string> strs = split_str(a, ' ');
-// 	for (string str : strs)
-// 	{
-// 		cout << str << endl;
-// 	}
+// 	vector<string> avals;
+// 	avals.push_back("[[1,10],[11,12]]");
+// 	avals.push_back("[[5,9],[11,15]]");
+// 	avals.push_back("[[4,12]]");
+// 	cout << find_intxn(avals) << endl;
 // 	return 0;
 // }

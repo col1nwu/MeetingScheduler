@@ -29,9 +29,18 @@ int init_tcp_sock(string ip_addr, int port_num)
 	return sock_fd;
 }
 
+int get_tcp_port(int sock_fd)
+{
+	sockaddr_in addr;
+	socklen_t len_addr = sizeof(addr);
+	getsockname(sock_fd, (struct sockaddr *) &addr, &len_addr);
+	return ntohs(addr.sin_port);
+}
+
 int main(int argc, char *argv[])
 {
 	int sock_fd = init_tcp_sock(IP_ADDR, PORT_TCP);
+	int port = get_tcp_port(sock_fd);
 
 	cout << "Client is up and running." << endl;
 
@@ -44,14 +53,14 @@ int main(int argc, char *argv[])
 		send_msg_tcp(sock_fd, inp);
 		cout << "Client finished sending the usernames to Main Server." << endl;
 
-		vector<string> msg_port = recv_msg_tcp(sock_fd);
-		if (msg_port[0][0] != '[')
+		string msg = recv_msg(sock_fd);
+		if (msg[0] != '[')
 		{
-			cout << "Client received the reply from Main Server using TCP over port " << msg_port[1] << ": ";
-			cout << msg_port[0] << " do not exist." << endl;
-			msg_port = recv_msg_tcp(sock_fd);
+			cout << "Client received the reply from Main Server using TCP over port " << port << ": ";
+			cout << msg << " do not exist." << endl;
+			msg = recv_msg(sock_fd);
 		}
-		cout << "Client received the reply from Main Server using TCP over port " << msg_port[1] << ": ";
+		cout << "Client received the reply from Main Server using TCP over port " << port << ": ";
 
 		cout << "-----Start a new request-----" << endl;
 	}

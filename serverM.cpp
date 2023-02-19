@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
 
 	cout << "Main Server is up and running." << endl;
 
-	string usrs_serverA_msg = recv_msg_udp(sockfd_udp);
-	cout << "Main Server received the username list from server A using UDP over port 21092." << endl;
+	string usrs_serverA_msg = recv_msg(sockfd_udp);
+	cout << "Main Server received the username list from server A using UDP over port " << PORT_UDP << "." << endl;
 	// string str_serverB = recv_msg_udp(sockfd_udp);
 
 	vector<string> usrs_serverA = split_str(usrs_serverA_msg, ',');
@@ -59,11 +59,11 @@ int main(int argc, char *argv[])
 
 		while (true)
 		{
-			vector<string> msg_port = recv_msg_tcp(sockfd_rmt);
-			if (msg_port.size() == 0) break;
-			cout << "Main Server received the request from client using TCP over port " << msg_port[1] << "." << endl;
+			string msg = recv_msg(sockfd_rmt);
+			if (msg.length() == 0) break;
+			cout << "Main Server received the request from client using TCP over port " << PORT_TCP << "." << endl;
 
-			vector<string> usrs = split_str(msg_port[0], ' ');
+			vector<string> usrs = split_str(msg, ' ');
 			vector<string> req_serverA, not_fnd;
 			for (string usr: usrs)
 			{
@@ -77,6 +77,9 @@ int main(int argc, char *argv[])
 			}
 			cout << "Found " << vec_to_str(req_serverA, ", ") << " located at Server A. Send to Server A." << endl;
 			send_msg_udp(sockfd_udp, addr_serverA, vec_to_str(req_serverA, ","));
+
+			string intxns_serverA = recv_msg(sockfd_udp);
+			cout << intxns_serverA << endl;
 		}
 	}
 

@@ -17,6 +17,7 @@ using namespace std;
 const string IP_ADDR = "127.0.0.1";
 const int SERVERM_PORT = 23092;
 const int SERVERA_PORT = 21092;
+const string SERVER_ID = "A";
 
 map<string, string> proc_inp_file() {
 	ifstream file("a.txt");
@@ -47,7 +48,7 @@ map<string, string> proc_inp_file() {
 
 int main(int argc, char *argv[])
 {
-	cout << "Server A is up and running using UDP on port " << SERVERA_PORT << "." << endl;
+	cout << "Server " << SERVER_ID << " is up and running using UDP on port " << SERVERA_PORT << "." << endl;
 
 	int sock_fd = init_udp_sock(IP_ADDR, SERVERA_PORT);
 	struct sockaddr_in addr_serverM = init_dest_addr_udp(IP_ADDR, SERVERM_PORT);
@@ -64,21 +65,22 @@ int main(int argc, char *argv[])
 
 	while (true)
 	{
-		string req_usrs_msg = recv_msg_udp(sock_fd);
+		string req_usrs_msg = recv_msg(sock_fd);
 
-		cout << "Server A received the usernames from Main Server using UDP over port " << SERVERA_PORT << "." << endl;
+		cout << "Server " << SERVER_ID << " received the usernames from Main Server using UDP over port " << SERVERA_PORT << "." << endl;
 
 		vector<string> req_usrs = split_str(req_usrs_msg, ',');
-		vector<string> timeslots;
+		vector<string> tss;
 		for (string usr : req_usrs)
 		{
-			timeslots.push_back(avals[usr]);
+			tss.push_back(avals[usr]);
 		}
 
-		for (string time : timeslots)
-		{
-			cout << time << endl;
-		}
+		string intxns = find_intxn(tss);
+		cout << "Found the intersection result: " << intxns << " for " << vec_to_str(req_usrs, ", ") << "." << endl;
+
+		send_msg_udp(sock_fd, addr_serverM, intxns);
+		cout << "Server " << SERVER_ID << " finished sending the response to Main Server." << endl;
 	}
 
 	return 0;
