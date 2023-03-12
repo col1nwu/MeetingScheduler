@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
 			msg = recv_msg(sock_fd);
 		}
 		cout << "Client received the reply from Main Server using TCP over port " << port << ": ";
+		cout << msg << endl;
 
 		cout << "-----Start a new request-----" << endl;
 	}

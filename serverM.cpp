@@ -79,7 +79,11 @@ int main(int argc, char *argv[])
 			send_msg_udp(sockfd_udp, addr_serverA, vec_to_str(req_serverA, ","));
 
 			string intxns_serverA = recv_msg(sockfd_udp);
+			cout << "Found the intersection between the results from server A and B:" << endl;
 			cout << intxns_serverA << endl;
+
+			string res = "Time intervals " + intxns_serverA + " works for " + vec_to_str(req_serverA, ", ");
+			send_msg_tcp(sockfd_rmt, res);
 		}
 	}
 
