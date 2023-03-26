@@ -37,7 +37,7 @@ map<string, string> proc_inp_file() {
 			if (curr_char != ' ') new_line += curr_char;
 		}
 
-		vector<string> usr_aval = split_str(new_line, ';');
+		vector<string> usr_aval = split_str(new_line, ";");
 		avals[usr_aval[0]] = usr_aval[1];
 	}
 
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
 		cout << "Server " << SERVER_ID << " received the usernames from Main Server using UDP over port " << SERVERA_PORT << "." << endl;
 
-		vector<string> req_usrs = split_str(req_usrs_msg, ',');
+		vector<string> req_usrs = split_str(req_usrs_msg, ",");
 		vector<string> tss;
 		for (string usr : req_usrs)
 		{
@@ -81,6 +81,24 @@ int main(int argc, char *argv[])
 
 		send_msg_udp(sock_fd, addr_serverM, intxns);
 		cout << "Server " << SERVER_ID << " finished sending the response to Main Server." << endl;
+
+		string mtg_time_msg = recv_msg(sock_fd);
+		vector<string> mtg_time_usrs = split_str(mtg_time_msg, " ");
+		string mtg_time = mtg_time_usrs[0];
+		cout << "Register a meeting at " << mtg_time << " and update the availability for the following users:" << endl;
+
+		vector<string> usrs = split_str(mtg_time_usrs[1], ",");
+		map<string, string> new_avals = update_avals(avals, usrs, mtg_time);
+
+		for (string usr : usrs)
+		{
+			cout << usr << ": updated from " << avals[usr] << " to " << new_avals[usr] << endl;
+		}
+
+
+		avals = new_avals;
+		cout << "Notified Main Server that registration has finished." << endl;
+		send_msg_udp(sock_fd, addr_serverM, "Registration completed!");
 	}
 
 	return 0;

@@ -17,11 +17,22 @@ int acpt_tcp_conn(int sock_fd_loc);
 // vector<string> recv_msg_tcp(int sock_fd);
 void send_msg_tcp(int sock_fd, string msg);
 
-vector<string> split_str(string str, char x);
+vector<string> split_str(string str, string x);
 string map_to_str(map<string, string> map);
 map<string, string> str_to_map(string str);
 string vec_to_str(vector<string> strs, string x);
+string ext_str(string str, string start_wrd, string end_wrd);
 
+
+struct ts
+{
+	int start;
+	int end;
+};
+
+vector<ts> str_to_ts(string str);
 string find_intxn(vector<string> avals);
+bool is_valid_ts(ts a, vector<ts> tss);
+map<string, string> update_avals(map<string, string> avals, vector<string> usrs, string mtg_time);
 
 #endif

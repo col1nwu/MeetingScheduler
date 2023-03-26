@@ -54,14 +54,35 @@ int main(int argc, char *argv[])
 		cout << "Client finished sending the usernames to Main Server." << endl;
 
 		string msg = recv_msg(sock_fd);
-		if (msg[0] != '[')
+		if (msg[0] != 'T')
 		{
 			cout << "Client received the reply from Main Server using TCP over port " << port << ": ";
 			cout << msg << " do not exist." << endl;
 			msg = recv_msg(sock_fd);
 		}
 		cout << "Client received the reply from Main Server using TCP over port " << port << ": ";
-		cout << msg << endl;
+		cout << msg << "." << endl;
+
+		string avals = ext_str(msg, "intervals", "works");
+		vector<ts> aval_ts = str_to_ts(avals);
+		string usrs = ext_str(msg, "for", "");
+
+		cout << "Please enter the final meeting time to register a meeting:" << endl;
+		string mtg_time;
+		getline(cin, mtg_time);
+		vector<ts> inp_ts = str_to_ts(mtg_time);
+
+		bool is_valid = is_valid_ts(inp_ts[0], aval_ts);
+		while (!is_valid)
+		{
+			cout << "Time interval " << mtg_time << " is not valid. Please enter again:" << endl;
+			getline(cin, mtg_time);
+			inp_ts = str_to_ts(mtg_time);
+			is_valid = is_valid_ts(inp_ts[0], aval_ts);
+		}
+
+		send_msg_tcp(sock_fd, mtg_time);
+		cout << "Sent the request to register " << mtg_time << " as the meeting time for " << usrs << "." << endl;
 
 		cout << "-----Start a new request-----" << endl;
 	}

@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 	cout << "Main Server received the username list from server A using UDP over port " << PORT_UDP << "." << endl;
 	// string str_serverB = recv_msg_udp(sockfd_udp);
 
-	vector<string> usrs_serverA = split_str(usrs_serverA_msg, ',');
+	vector<string> usrs_serverA = split_str(usrs_serverA_msg, ",");
 	// map<string, string> usrs_serverB = str_to_map(str_serverB);
 
 	while (true)
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 			if (msg.length() == 0) break;
 			cout << "Main Server received the request from client using TCP over port " << PORT_TCP << "." << endl;
 
-			vector<string> usrs = split_str(msg, ' ');
+			vector<string> usrs = split_str(msg, " ");
 			vector<string> req_serverA, not_fnd;
 			for (string usr: usrs)
 			{
@@ -80,10 +80,19 @@ int main(int argc, char *argv[])
 
 			string intxns_serverA = recv_msg(sockfd_udp);
 			cout << "Found the intersection between the results from server A and B:" << endl;
-			cout << intxns_serverA << endl;
+			cout << intxns_serverA << "." << endl;
 
 			string res = "Time intervals " + intxns_serverA + " works for " + vec_to_str(req_serverA, ", ");
 			send_msg_tcp(sockfd_rmt, res);
+
+			string mtg_time = recv_msg(sockfd_rmt);
+			send_msg_udp(sockfd_udp, addr_serverA, mtg_time + " " + vec_to_str(req_serverA, ","));
+
+			string reg_msg = recv_msg(sockfd_udp);
+			if (reg_msg == "Registration completed!")
+			{
+				cout << "Received the notification that registration has finished" << endl;
+			}
 		}
 	}
 

@@ -99,17 +99,19 @@ void send_msg_tcp(int sock_fd, string msg)
 -------------------------------------------------
 */
 
-vector<string> split_str(string str, char x)
+vector<string> split_str(string str, string x)
 {
 	vector<string> words;
-	string word;
-	istringstream iss(str);
+	size_t i = 0;
 
-	while (getline(iss, word, x))
+	while ((i = str.find(x)) != string::npos)
 	{
+		string word = str.substr(0, i);
 		words.push_back(word);
+		str.erase(0, i + x.length());
 	}
 
+	words.push_back(str);
 	return words;
 }
 
@@ -128,10 +130,10 @@ map<string, string> str_to_map(string str)
 {
 	map<string, string> map;
 
-	vector<string> usr_avals = split_str(str, ' ');
+	vector<string> usr_avals = split_str(str, " ");
 	for (string usr_aval : usr_avals)
 	{
-		vector<string> tmp = split_str(usr_aval, ';');
+		vector<string> tmp = split_str(usr_aval, ";");
 	}
 	return map;
 }
@@ -151,17 +153,44 @@ string vec_to_str(vector<string> strs, string x)
 	return a;
 }
 
+string ext_str(string str, string start_wrd, string end_wrd)
+{
+	if (start_wrd == "")
+	{
+		size_t end_i = str.find(end_wrd);
+
+		if (end_i == 0 || end_i == string::npos) return "";
+		--end_i;
+
+		return str.substr(0, end_i);
+	}
+	else if (end_wrd == "")
+	{
+		size_t start_i = str.find(start_wrd);
+		
+		if (start_i == string::npos) return "";
+		start_i += start_wrd.length() + 1;
+		
+		return str.substr(start_i);
+	}
+	else {
+		size_t start_i = str.find(start_wrd);
+		size_t end_i = str.find(end_wrd);
+
+		if (start_i == string::npos || end_i == string::npos || end_i <= start_i) return "";
+
+		start_i += start_wrd.length() + 1;
+		--end_i;
+
+		return str.substr(start_i, end_i - start_i);
+	}
+}
+
 /*
 -------------------------------------------------
         Interval Intersection Alogorithm
 -------------------------------------------------
 */
-
-struct ts
-{
-	int start;
-	int end;
-};
 
 bool comp_ts(ts ts1, ts ts2)
 {
@@ -170,14 +199,20 @@ bool comp_ts(ts ts1, ts ts2)
 
 vector<ts> str_to_ts(string str)
 {
-	string nums_str;
+	string new_str;
 	for (char a : str)
+	{
+		if (a != ' ') new_str += a;
+	}
+
+	string nums_str;
+	for (char a : new_str)
 	{
 		if (a == '[' || a == ']') continue;
 		if (a == ',') nums_str += ' ';
 		else nums_str += a;
 	}
-	vector<string> nums = split_str(nums_str, ' ');
+	vector<string> nums = split_str(nums_str, " ");
 	vector<ts> tss;
 	size_t i = 0;
 	while (i < nums.size())
@@ -236,12 +271,50 @@ string find_intxn(vector<string> avals)
 	return tmp;
 }
 
+bool is_valid_ts(ts a, vector<ts> tss)
+{
+	int min_start = a.start, max_end = a.end;
+	for (ts intvl : tss)
+	{
+		if (intvl.start > min_start) return false;
+		if (intvl.end >= max_end) return true;
+		max_end = max(max_end, intvl.end);
+	}
+	return false;
+}
+
+map<string, string> update_avals(map<string, string> avals, vector<string> usrs, string mtg_time)
+{
+	// make a deep copy of current availabilities
+	map<string, string> new_avals;
+	for (auto kv = avals.begin(); kv != avals.end(); ++kv)
+	{
+		new_avals[kv->first] = kv->second;
+	}
+
+	ts mtg = str_to_ts(mtg_time)[0];
+	for (string usr : usrs)
+	{
+		vector<ts> new_ts;
+		string orig_ts_str = avals[usr];
+		vector<ts> orig_ts = str_to_ts(orig_ts_str);
+		for (ts intvl : orig_ts)
+		{
+			if (intvl.end <= mtg.start || intvl.start >= mtg.end) new_ts.push_back(intvl);
+			else
+			{
+				if (intvl.start < mtg.start) new_ts.push_back({intvl.start, mtg.start});
+				if (intvl.end > mtg.end) new_ts.push_back({mtg.end, intvl.end});
+			}
+		}
+		new_avals[usr] = ts_to_str(new_ts);
+	}
+	return new_avals;
+}
+
 // int main()
 // {
 // 	vector<string> avals;
-// 	avals.push_back("[[1,10],[11,12]]");
-// 	avals.push_back("[[5,9],[11,15]]");
-// 	avals.push_back("[[4,12]]");
-// 	cout << find_intxn(avals) << endl;
+// 	cout << ext_str("... intervals hello world. works...", "intervals", "works") << endl;
 // 	return 0;
 // }
