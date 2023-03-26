@@ -56,11 +56,11 @@ int main(int argc, char *argv[])
 		string msg = recv_msg(sock_fd);
 		if (msg[0] != 'T')
 		{
-			cout << "Client received the reply from Main Server using TCP over port " << port << ": ";
+			cout << "Client received the reply from Main Server using TCP over port " << port << ":" << endl;
 			cout << msg << " do not exist." << endl;
 			msg = recv_msg(sock_fd);
 		}
-		cout << "Client received the reply from Main Server using TCP over port " << port << ": ";
+		cout << "Client received the reply from Main Server using TCP over port " << port << ":" << endl;
 		cout << msg << "." << endl;
 
 		string avals = ext_str(msg, "intervals", "works");

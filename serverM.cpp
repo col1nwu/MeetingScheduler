@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 			send_msg_tcp(sockfd_rmt, res);
 
 			string mtg_time = recv_msg(sockfd_rmt);
-			send_msg_udp(sockfd_udp, addr_serverA, mtg_time + " " + vec_to_str(req_serverA, ","));
+			send_msg_udp(sockfd_udp, addr_serverA, mtg_time);
 
 			string reg_msg = recv_msg(sockfd_udp);
 			if (reg_msg == "Registration completed!")
