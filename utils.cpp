@@ -8,6 +8,7 @@
 #include <iostream>
 #include <map>
 #include <netinet/in.h>
+#include <set>
 #include <sstream>
 #include <string>
 #include <sys/socket.h>
@@ -17,7 +18,7 @@
 
 using namespace std;
 
-string recv_msg(int sock_fd)
+recv_struct recv_msg(int sock_fd)
 {
 	char buffer[1024];
 
@@ -27,11 +28,11 @@ string recv_msg(int sock_fd)
 	if (len_resp > 0)
 	{
 		buffer[len_resp] = '\0';
-		return string(buffer);
+		return {string(buffer), ntohs(addr_rmt.sin_port)};
 	}
 	else if (len_resp < 0) cout << "Error in receiving message..." << endl;
 
-	return "";
+	return {"", -1};
 }
 
 /*
@@ -151,6 +152,12 @@ string vec_to_str(vector<string> strs, string x)
 	}
 
 	return a;
+}
+
+set<string> vec_to_set(vector<string> strs)
+{
+	set<string> set_str(strs.begin(), strs.end());
+	return set_str;
 }
 
 string ext_str(string str, string start_wrd, string end_wrd)

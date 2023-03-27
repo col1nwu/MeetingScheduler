@@ -2,12 +2,19 @@
 #define UTILS_H
 
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-string recv_msg(int sock_fd);
+struct recv_struct
+{
+	string msg;
+	int port_num;
+};
+
+recv_struct recv_msg(int sock_fd);
 
 int init_udp_sock(string ip_addr, int port_num);
 struct sockaddr_in init_dest_addr_udp(string ip_addr, int port_num);
@@ -21,6 +28,7 @@ vector<string> split_str(string str, string x);
 string map_to_str(map<string, string> map);
 map<string, string> str_to_map(string str);
 string vec_to_str(vector<string> strs, string x);
+set<string> vec_to_set(vector<string> strs);
 string ext_str(string str, string start_wrd, string end_wrd);
 
 
@@ -31,6 +39,7 @@ struct ts
 };
 
 vector<ts> str_to_ts(string str);
+string find_intxn(string avals1, string avals2);
 string find_intxn(vector<string> avals);
 bool is_valid_ts(ts a, vector<ts> tss);
 map<string, string> update_avals(map<string, string> avals, vector<string> usrs, string mtg_time);

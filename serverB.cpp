@@ -1,8 +1,8 @@
 /**
- * @file serverA.cpp
- * Implementation of the backend server A
+ * @file serverB.cpp
+ * Implementation of the backend server B
  * 
- * Server A first reads users' availabilities from text files and then communicates with Main
+ * Server B first reads users' availabilities from text files and then communicates with Main
  * Server via UDP.
  * 
  * @date April 23, 2023
@@ -27,8 +27,8 @@ using namespace std;
 
 const string IP_ADDR = "127.0.0.1";
 const int SERVERM_PORT = 23092;
-const int SERVERA_PORT = 21092;
-const string SERVER_ID = "A";
+const int SERVERA_PORT = 22092;
+const string SERVER_ID = "B";
 
 /**
  * Read input file and store users' availabilities in a map
@@ -37,10 +37,10 @@ const string SERVER_ID = "A";
  */
 map<string, string> proc_inp_file() {
 	// open input file stream and read file
-	ifstream file("a.txt");
+	ifstream file("b.txt");
 	if (!file.is_open())
 	{
-		cerr << "[ServerA] Cannot open input file..." << endl;
+		cerr << "[ServerB] Cannot open input file..." << endl;
 		exit(1);
 	}
 

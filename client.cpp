@@ -53,12 +53,12 @@ int main(int argc, char *argv[])
 		send_msg_tcp(sock_fd, inp);
 		cout << "Client finished sending the usernames to Main Server." << endl;
 
-		string msg = recv_msg(sock_fd);
+		string msg = recv_msg(sock_fd).msg;
 		if (msg[0] != 'T')
 		{
 			cout << "Client received the reply from Main Server using TCP over port " << port << ":" << endl;
 			cout << msg << " do not exist." << endl;
-			msg = recv_msg(sock_fd);
+			msg = recv_msg(sock_fd).msg;
 		}
 		cout << "Client received the reply from Main Server using TCP over port " << port << ":" << endl;
 		cout << msg << "." << endl;
@@ -84,6 +84,9 @@ int main(int argc, char *argv[])
 		send_msg_tcp(sock_fd, mtg_time);
 		cout << "Sent the request to register " << mtg_time << " as the meeting time for " << usrs << "." << endl;
 
+		string reg_notif = recv_msg(sock_fd).msg;
+		cout << "Received the notification that registration has finished." << endl;
+		
 		cout << "-----Start a new request-----" << endl;
 	}
 

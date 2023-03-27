@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -g -Wall -std=c++11
 
-SRCS = client.cpp serverM.cpp serverA.cpp
+SRCS = client.cpp serverM.cpp serverA.cpp serverB.cpp
 OBJS = $(SRCS:.cpp=)
 
 all: $(OBJS) $(UTILS)
