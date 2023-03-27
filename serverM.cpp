@@ -83,20 +83,34 @@ int main(int argc, char *argv[])
 				else if (usrs_serverB.find(usr) != end(usrs_serverB)) req_serverB.push_back(usr);
 				else not_fnd.push_back(usr);
 			}
-			if (not_fnd.size() > 0) {
+
+			if (not_fnd.size() > 0)
+			{
 				string not_fnd_usrs = vec_to_str(not_fnd, ", ");
 				cout << not_fnd_usrs << " do not exist. Send a reply to the client." << endl;
 				send_msg_tcp(sockfd_rmt, not_fnd_usrs);
 			}
 
-			cout << "Found " << vec_to_str(req_serverA, ", ") << " located at Server A. Send to Server A." << endl;
-			send_msg_udp(sockfd_udp, addr_serverA, vec_to_str(req_serverA, ","));
+			bool is_serverA = false, is_serverB = false;
+			if (req_serverA.size() > 0)
+			{
+				cout << "Found " << vec_to_str(req_serverA, ", ") << " located at Server A. Send to Server A." << endl;
+				send_msg_udp(sockfd_udp, addr_serverA, vec_to_str(req_serverA, ","));
+				is_serverA = true;
+			}
+			if (req_serverB.size() > 0)
+			{
+				cout << "Found " << vec_to_str(req_serverB, ", ") << " located at Server B. Send to Server B." << endl;
+				send_msg_udp(sockfd_udp, addr_serverB, vec_to_str(req_serverB, ","));
+				is_serverB = true;
+			}
 
-			cout << "Found " << vec_to_str(req_serverB, ", ") << " located at Server B. Send to Server B." << endl;
-			send_msg_udp(sockfd_udp, addr_serverB, vec_to_str(req_serverB, ","));
+			int flag = 0;
+			if (is_serverA && is_serverB) flag = 2;
+			else if (is_serverA || is_serverB) flag = 1;
 
 			string intxns_serverA, intxns_serverB;
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < flag; i++)
 			{
 				recv_struct intxns_msg = recv_msg(sockfd_udp);
 				if (intxns_msg.port_num == PORT_SERVERA)
@@ -113,9 +127,25 @@ int main(int argc, char *argv[])
 				}
 			}
 
-			string intxns = find_intxn(intxns_serverA, intxns_serverB);
-			cout << "Found the intersection between the results from server A and B:" << endl;
-			cout << intxns << "." << endl;
+			string intxns = "[]";
+			if (is_serverA && is_serverB)
+			{
+				intxns = find_intxn(intxns_serverA, intxns_serverB);
+				cout << "Found the intersection between the results from server A and B:" << endl;
+				cout << intxns << "." << endl;
+			}
+			else if (is_serverA)
+			{
+				intxns = intxns_serverA;
+				cout << "Found the intersection between the results from server A:" << endl;
+				cout << intxns << "." << endl;
+			}
+			else if (is_serverB)
+			{
+				intxns = intxns_serverB;
+				cout << "Found the intersection between the results from server B:" << endl;
+				cout << intxns << "." << endl;
+			}
 
 			req_serverA.insert(req_serverA.end(), req_serverB.begin(), req_serverB.end());
 			string res = "Time intervals " + intxns + " works for " + vec_to_str(req_serverA, ", ");
@@ -123,10 +153,10 @@ int main(int argc, char *argv[])
 			cout << "Main Server sent the result to the client." << endl;
 
 			string mtg_time = recv_msg(sockfd_rmt).msg;
-			send_msg_udp(sockfd_udp, addr_serverA, mtg_time);
-			send_msg_udp(sockfd_udp, addr_serverB, mtg_time);
+			if (is_serverA) send_msg_udp(sockfd_udp, addr_serverA, mtg_time);
+			if (is_serverB) send_msg_udp(sockfd_udp, addr_serverB, mtg_time);
 
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < flag; i++)
 			{
 				string reg_notif = recv_msg(sockfd_udp).msg;
 			}

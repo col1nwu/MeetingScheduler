@@ -50,6 +50,8 @@ int main(int argc, char *argv[])
 		string inp;
 		getline(cin, inp);
 
+		cout << inp << endl;
+
 		send_msg_tcp(sock_fd, inp);
 		cout << "Client finished sending the usernames to Main Server." << endl;
 
