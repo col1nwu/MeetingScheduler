@@ -322,6 +322,6 @@ map<string, string> update_avals(map<string, string> avals, vector<string> usrs,
 // int main()
 // {
 // 	vector<string> avals;
-// 	cout << ext_str("... intervals hello world. works...", "intervals", "works") << endl;
+// 	cout << split_str("a b", " ").size() << endl;
 // 	return 0;
 // }
