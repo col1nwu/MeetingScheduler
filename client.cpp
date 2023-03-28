@@ -50,7 +50,13 @@ int main(int argc, char *argv[])
 		string inp;
 		getline(cin, inp);
 
-		cout << inp << endl;
+		bool is_valid_usr = (inp != "" && split_str(inp, " ").size() > 10);
+		while (!is_valid_usr)
+		{
+			cout << "The usernames you entered are invalid. Please enter again:" << endl;
+			getline(cin, inp);
+			is_valid_usr = (inp != "" && split_str(inp, " ").size() > 10);
+		}
 
 		send_msg_tcp(sock_fd, inp);
 		cout << "Client finished sending the usernames to Main Server." << endl;
@@ -74,13 +80,13 @@ int main(int argc, char *argv[])
 		getline(cin, mtg_time);
 		vector<ts> inp_ts = str_to_ts(mtg_time);
 
-		bool is_valid = is_valid_ts(inp_ts[0], aval_ts);
-		while (!is_valid)
+		bool is_valid_time = is_valid_ts(inp_ts[0], aval_ts);
+		while (!is_valid_time)
 		{
 			cout << "Time interval " << mtg_time << " is not valid. Please enter again:" << endl;
 			getline(cin, mtg_time);
 			inp_ts = str_to_ts(mtg_time);
-			is_valid = is_valid_ts(inp_ts[0], aval_ts);
+			is_valid_time = is_valid_ts(inp_ts[0], aval_ts);
 		}
 
 		send_msg_tcp(sock_fd, mtg_time);
