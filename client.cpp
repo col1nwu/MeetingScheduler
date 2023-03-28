@@ -50,12 +50,14 @@ int main(int argc, char *argv[])
 		string inp;
 		getline(cin, inp);
 
-		bool is_valid_usr = (inp != "" && split_str(inp, " ").size() <= 10);
+		vector<string> inp_usrs = split_str(inp, " ");
+		bool is_valid_usr = (0 < inp_usrs.size() && inp_usrs.size() <= 10);
 		while (!is_valid_usr)
 		{
 			cout << "The usernames you entered are invalid. Please enter again:" << endl;
 			getline(cin, inp);
-			is_valid_usr = (inp != "" && split_str(inp, " ").size() <= 10);
+			inp_usrs = split_str(inp, " ");
+			is_valid_usr = (0 < inp_usrs.size() && inp_usrs.size() <= 10);
 		}
 
 		send_msg_tcp(sock_fd, inp);

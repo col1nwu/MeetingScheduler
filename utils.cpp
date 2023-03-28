@@ -108,11 +108,11 @@ vector<string> split_str(string str, string x)
 	while ((i = str.find(x)) != string::npos)
 	{
 		string word = str.substr(0, i);
-		words.push_back(word);
+		if (word != "") words.push_back(word);
 		str.erase(0, i + x.length());
 	}
 
-	words.push_back(str);
+	if (str != "") words.push_back(str);
 	return words;
 }
 
@@ -321,7 +321,10 @@ map<string, string> update_avals(map<string, string> avals, vector<string> usrs,
 
 // int main()
 // {
-// 	vector<string> avals;
-// 	cout << split_str("a b", " ").size() << endl;
+// 	vector<string> strs = split_str("", " ");
+// 	for (string str : strs)
+// 	{
+// 		cout << str << "." << endl;
+// 	}
 // 	return 0;
 // }
