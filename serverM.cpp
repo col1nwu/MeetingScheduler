@@ -1,3 +1,15 @@
+/**
+ * @file serverM.cpp
+ * Implementation of the main server
+ * 
+ * Main server is the heart in this system. It communicates with client via TCP and backend servers
+ * via UDP. Main server coordinates the communication between client and backend servers, and it is
+ * critical.
+ * 
+ * @date April 23, 2023
+ * @author Colin Wu, daizongw@usc.edu
+ */
+
 #include "utils.h"
 
 #include <algorithm>
@@ -21,6 +33,13 @@ const int PORT_TCP = 24092;
 const int PORT_SERVERA = 21092;
 const int PORT_SERVERB = 22092;
 
+/**
+ * Initialize TCP socket at server side.
+ * 
+ * @param ip_addr IP address of server
+ * @param port_num Port number of server
+ * @return socket descriptor of server
+ */
 int init_tcp_sock(string ip_addr, int port_num)
 {
 	int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -40,14 +59,17 @@ int init_tcp_sock(string ip_addr, int port_num)
 
 int main(int argc, char *argv[])
 {
+	// initialize UDP and TCP sockets
 	int sockfd_udp = init_udp_sock(IP_ADDR, PORT_UDP);
 	int sockfd_tcp = init_tcp_sock(IP_ADDR, PORT_TCP);
 
+	// retrieve UDP address for backend servers
 	struct sockaddr_in addr_serverA = init_dest_addr_udp(IP_ADDR, PORT_SERVERA);
 	struct sockaddr_in addr_serverB = init_dest_addr_udp(IP_ADDR, PORT_SERVERB);
 
 	cout << "Main Server is up and running." << endl;
 
+	// receive username list from backend servers
 	set<string> usrs_serverA, usrs_serverB;
 	for (int i = 0; i < 2; i++)
 	{
@@ -67,14 +89,17 @@ int main(int argc, char *argv[])
 
 	while (true)
 	{
+		// accept TCP connections from client
 		int sockfd_rmt = acpt_tcp_conn(sockfd_tcp);
 
 		while (true)
 		{
+			// receive request, containing username list, from client
 			string msg = recv_msg(sockfd_rmt).msg;
 			if (msg.length() == 0) break;
 			cout << "Main Server received the request from client using TCP over port " << PORT_TCP << "." << endl;
 
+			// find which server contains availabilities of requested usernames
 			vector<string> usrs = split_str(msg, " ");
 			vector<string> req_serverA, req_serverB, not_fnd;
 			for (string usr: usrs)
@@ -84,6 +109,7 @@ int main(int argc, char *argv[])
 				else not_fnd.push_back(usr);
 			}
 
+			// inform client if any of requested usernames do not exist at backend
 			if (not_fnd.size() > 0)
 			{
 				string not_fnd_usrs = vec_to_str(not_fnd, ", ");
@@ -91,6 +117,8 @@ int main(int argc, char *argv[])
 				send_msg_tcp(sockfd_rmt, not_fnd_usrs);
 			}
 
+			// contact backend servers if users are found in that server
+			// do nothing if no user is found in that server
 			bool is_serverA = false, is_serverB = false;
 			if (req_serverA.size() > 0)
 			{
@@ -105,6 +133,7 @@ int main(int argc, char *argv[])
 				is_serverB = true;
 			}
 
+			// wait for backend servers to send back availabilities of users on that server
 			int flag = 0;
 			if (is_serverA && is_serverB) flag = 2;
 			else if (is_serverA || is_serverB) flag = 1;
@@ -127,6 +156,9 @@ int main(int argc, char *argv[])
 				}
 			}
 
+			// find intersection of results from two backend servers
+			// if users are all at one server, output result from backend server directly
+			// output "[]" if no user is entered or empty result
 			string intxns = "[]";
 			if (is_serverA && is_serverB)
 			{
@@ -147,15 +179,20 @@ int main(int argc, char *argv[])
 				cout << intxns << "." << endl;
 			}
 
+			// send intersection to client
 			req_serverA.insert(req_serverA.end(), req_serverB.begin(), req_serverB.end());
 			string res = "Time intervals " + intxns + " works for " + vec_to_str(req_serverA, ", ");
 			send_msg_tcp(sockfd_rmt, res);
 			cout << "Main Server sent the result to the client." << endl;
 
+			// receive meeting time from client
 			string mtg_time = recv_msg(sockfd_rmt).msg;
+
+			// register meeting time for requested users
 			if (is_serverA) send_msg_udp(sockfd_udp, addr_serverA, mtg_time);
 			if (is_serverB) send_msg_udp(sockfd_udp, addr_serverB, mtg_time);
 
+			// wait for backend servers to send back registration confirmation
 			for (int i = 0; i < flag; i++)
 			{
 				string reg_notif = recv_msg(sockfd_udp).msg;
