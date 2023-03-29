@@ -82,14 +82,18 @@ int main(int argc, char *argv[])
 		getline(cin, mtg_time);
 		vector<ts> inp_ts = str_to_ts(mtg_time);
 
-		bool is_valid_time = is_valid_ts(inp_ts[0], aval_ts);
-		while (!is_valid_time)
+		if (inp_ts.size() > 0)
 		{
-			cout << "Time interval " << mtg_time << " is not valid. Please enter again:" << endl;
-			getline(cin, mtg_time);
-			inp_ts = str_to_ts(mtg_time);
-			is_valid_time = is_valid_ts(inp_ts[0], aval_ts);
+			bool is_valid_time = is_valid_ts(inp_ts[0], aval_ts);
+			while (!is_valid_time)
+			{
+				cout << "Time interval " << mtg_time << " is not valid. Please enter again:" << endl;
+				getline(cin, mtg_time);
+				inp_ts = str_to_ts(mtg_time);
+				is_valid_time = is_valid_ts(inp_ts[0], aval_ts);
+			}
 		}
+		else mtg_time = "[]";
 
 		send_msg_tcp(sock_fd, mtg_time);
 		cout << "Sent the request to register " << mtg_time << " as the meeting time for " << usrs << "." << endl;

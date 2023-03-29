@@ -111,12 +111,15 @@ int main(int argc, char *argv[])
 		cout << "Register a meeting at " << mtg_time << " and update the availability for the following users:" << endl;
 
 		// update each requested user based on scheduled time slot (remove scheduled time slots from availabilities)
-		map<string, string> new_avals = update_avals(avals, req_usrs, mtg_time);
-		for (string usr : req_usrs)
+		if (mtg_time != "[]")
 		{
-			cout << usr << ": updated from " << avals[usr] << " to " << new_avals[usr] << endl;
+			map<string, string> new_avals = update_avals(avals, req_usrs, mtg_time);
+			for (string usr : req_usrs)
+			{
+				cout << usr << ": updated from " << avals[usr] << " to " << new_avals[usr] << endl;
+			}
+			avals = new_avals;
 		}
-		avals = new_avals;
 
 		// send notifications to Main Server indicating registration completes
 		cout << "Notified Main Server that registration has finished." << endl;
