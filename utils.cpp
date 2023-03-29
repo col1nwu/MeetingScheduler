@@ -292,6 +292,9 @@ bool is_valid_ts(ts a, vector<ts> tss)
 
 map<string, string> update_avals(map<string, string> avals, vector<string> usrs, string mtg_time)
 {
+	// if meeting time is empty, then we don't need to update availability table
+	if (mtg_time == "[]") return avals;
+
 	// make a deep copy of current availabilities
 	map<string, string> new_avals;
 	for (auto kv = avals.begin(); kv != avals.end(); ++kv)

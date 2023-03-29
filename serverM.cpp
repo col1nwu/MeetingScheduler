@@ -52,7 +52,7 @@ int init_tcp_sock(string ip_addr, int port_num)
 
 	bind(sock_fd, (struct sockaddr *) &addr, sizeof(addr));
 
-	listen(sock_fd, 5);
+	listen(sock_fd, 1);
 
 	return sock_fd;
 }

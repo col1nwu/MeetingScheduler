@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 
 		string reg_notif = recv_msg(sock_fd).msg;
 		cout << "Received the notification that registration has finished." << endl;
-		
+
 		cout << "-----Start a new request-----" << endl;
 	}
 

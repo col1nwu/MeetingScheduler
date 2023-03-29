@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
 		usrs.push_back(kv.first);
 	}
 	send_msg_udp(sock_fd, addr_serverM, vec_to_str(usrs, ","));
+	cout << "Server " << SERVER_ID << " finished sending a list of usernames to Main Server." << endl;
 
 	while (true)
 	{
@@ -111,15 +112,12 @@ int main(int argc, char *argv[])
 		cout << "Register a meeting at " << mtg_time << " and update the availability for the following users:" << endl;
 
 		// update each requested user based on scheduled time slot (remove scheduled time slots from availabilities)
-		if (mtg_time != "[]")
+		map<string, string> new_avals = update_avals(avals, req_usrs, mtg_time);
+		for (string usr : req_usrs)
 		{
-			map<string, string> new_avals = update_avals(avals, req_usrs, mtg_time);
-			for (string usr : req_usrs)
-			{
-				cout << usr << ": updated from " << avals[usr] << " to " << new_avals[usr] << endl;
-			}
-			avals = new_avals;
+			cout << usr << ": updated from " << avals[usr] << " to " << new_avals[usr] << endl;
 		}
+		avals = new_avals;
 
 		// send notifications to Main Server indicating registration completes
 		cout << "Notified Main Server that registration has finished." << endl;
