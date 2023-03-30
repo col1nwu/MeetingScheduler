@@ -1,6 +1,6 @@
 /**
  * @file serverB.cpp
- * Implementation of the backend server B
+ * Implementation of Backend Server B
  * 
  * Server B first reads users' availabilities from text files and then communicates with Main
  * Server via UDP.

@@ -1,6 +1,6 @@
 /**
  * @file serverM.cpp
- * Implementation of the main server
+ * Implementation of Main Server
  * 
  * Main server is the heart in this system. It communicates with client via TCP and backend servers
  * via UDP. Main server coordinates the communication between client and backend servers, and it is
@@ -38,7 +38,7 @@ const int PORT_SERVERB = 22092;
  * 
  * @param ip_addr IP address of server
  * @param port_num Port number of server
- * @return socket descriptor of server
+ * @return socket descriptor (int) of server
  */
 int init_tcp_sock(string ip_addr, int port_num)
 {
