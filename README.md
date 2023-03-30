@@ -4,13 +4,10 @@
 
 Name: Daizong (Colin) Wu
 
-Email: daizongw@usc.edu
-
 Student ID: 8443173092
 
 April 23, 2023
 
----
 
 ## Accomplishments
 
