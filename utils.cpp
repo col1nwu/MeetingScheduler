@@ -123,7 +123,7 @@ void send_msg_udp(int sock_fd, struct sockaddr_in addr_dest, string msg)
 /**
  * Accepts TCP connection.
  * 
- * @param sock_fd Socket descriptor of TCP socket
+ * @param sock_fd_loc Socket descriptor of parent TCP socket
  * @return socket descriptor of child TCP process
  */
 int acpt_tcp_conn(int sock_fd_loc)
