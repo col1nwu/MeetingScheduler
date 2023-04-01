@@ -1,3 +1,14 @@
+/**
+ * @file utils.cpp
+ * Implementation of a list of utility functions
+ * 
+ * These utilities functions are commonly used throughout the project, so they were extracted
+ * to reduce redundancy.
+ * 
+ * @date April 23, 2023
+ * @author Colin Wu, daizongw@usc.edu
+ */
+
 #include "utils.h"
 
 #include <algorithm>
@@ -18,6 +29,14 @@
 
 using namespace std;
 
+/**
+ * Receives message from remote.
+ * 
+ * TCP and UDP connections can both use this function.
+ * 
+ * @param sock_fd Socket descriptor of remote
+ * @return message from remote and port number of remote
+ */
 recv_struct recv_msg(int sock_fd)
 {
 	char buffer[1024];
@@ -41,6 +60,13 @@ recv_struct recv_msg(int sock_fd)
 -------------------------------------------------
 */
 
+/**
+ * Initializes UDP socket.
+ * 
+ * @param ip_addr IP address of host
+ * @param port_num Port number of host
+ * @return socket descriptor (int) of host
+ */
 int init_udp_sock(string ip_addr, int port_num)
 {
 	int sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -56,6 +82,13 @@ int init_udp_sock(string ip_addr, int port_num)
 	return sock_fd;
 }
 
+/**
+ * Initializes destination UDP socket.
+ * 
+ * @param ip_addr IP address of remote host
+ * @param port_num Port number of remote host
+ * @return socket descriptor (int) of remote host
+ */
 struct sockaddr_in init_dest_addr_udp(string ip_addr, int port_num)
 {
 	struct sockaddr_in dest_addr;
@@ -67,6 +100,14 @@ struct sockaddr_in init_dest_addr_udp(string ip_addr, int port_num)
 	return dest_addr;
 }
 
+/**
+ * Sends UDP message from host to remote host.
+ * 
+ * @param sock_fd Socket descriptor of UDP socket on host
+ * @param sockaddr_in UDP Socket descriptor of UDP socket on remote host
+ * @param msg Message that needs to be transmitted 
+ * @return void
+ */
 void send_msg_udp(int sock_fd, struct sockaddr_in addr_dest, string msg)
 {
 	// can use a variable to contain the result
@@ -79,16 +120,29 @@ void send_msg_udp(int sock_fd, struct sockaddr_in addr_dest, string msg)
 -------------------------------------------------
 */
 
-int acpt_tcp_conn(int sock_fd_loc)
+/**
+ * Accepts TCP connection.
+ * 
+ * @param sock_fd Socket descriptor of TCP socket
+ * @return socket descriptor of child TCP process
+ */
+int acpt_tcp_conn(int sock_fd)
 {
 	struct sockaddr_in addr_rmt;
 	socklen_t len_rmt = sizeof(addr_rmt);
 	
-	int sock_fd = accept(sock_fd_loc, (struct sockaddr *) &addr_rmt, &len_rmt);
+	int sock_fd = accept(sock_fd, (struct sockaddr *) &addr_rmt, &len_rmt);
 
 	return sock_fd;
 }
 
+/**
+ * Sends TCP message from host to remote host.
+ * 
+ * @param sock_fd Socket descriptor of TCP socket on host
+ * @param msg Message that needs to be transmitted 
+ * @return void
+ */
 void send_msg_tcp(int sock_fd, string msg)
 {
 	send(sock_fd, msg.c_str(), msg.length(), 0);
@@ -100,6 +154,13 @@ void send_msg_tcp(int sock_fd, string msg)
 -------------------------------------------------
 */
 
+/**
+ * Splits string by delimiter
+ * 
+ * @param str String to split
+ * @param x Delimiter used to split string
+ * @return vector of strings containing substrings
+ */
 vector<string> split_str(string str, string x)
 {
 	vector<string> words;
@@ -116,6 +177,12 @@ vector<string> split_str(string str, string x)
 	return words;
 }
 
+/**
+ * Converts a map into string representation.
+ * 
+ * @param map Map to convert
+ * @return string representing key-value pairs in map
+ */
 string map_to_str(map<string, string> map)
 {
 	string str;
@@ -127,6 +194,12 @@ string map_to_str(map<string, string> map)
 	return str;
 }
 
+/**
+ * Converts string into map of key-value pairs.
+ * 
+ * @param str String to convert
+ * @return map containing key-value pairs parsed from string
+ */
 map<string, string> str_to_map(string str)
 {
 	map<string, string> map;
@@ -139,6 +212,13 @@ map<string, string> str_to_map(string str)
 	return map;
 }
 
+/**
+ * Converts vector into string representation.
+ * 
+ * @param strs Vector of strings to convert
+ * @param x Separator of strings
+ * @return string representing elements in vector
+ */
 string vec_to_str(vector<string> strs, string x)
 {
 	string a;
@@ -154,12 +234,26 @@ string vec_to_str(vector<string> strs, string x)
 	return a;
 }
 
+/**
+ * Converts vector into set representation.
+ * 
+ * @param strs Vector of strings to convert
+ * @return set representing elements in vector
+ */
 set<string> vec_to_set(vector<string> strs)
 {
 	set<string> set_str(strs.begin(), strs.end());
 	return set_str;
 }
 
+/**
+ * Extracts information from string (retrieves substring from string).
+ * 
+ * @param str String containing information
+ * @param start_wrd Start word of substring. If empty, starts from beginning
+ * @param end_wrd End word of substring. If empty, goes towards end
+ * @return information wanted
+ */
 string ext_str(string str, string start_wrd, string end_wrd)
 {
 	if (start_wrd == "")
@@ -199,11 +293,12 @@ string ext_str(string str, string start_wrd, string end_wrd)
 -------------------------------------------------
 */
 
-bool comp_ts(ts ts1, ts ts2)
-{
-	return ts1.start < ts2.start;
-}
-
+/**
+ * Converts string to vector of timeslots.
+ * 
+ * @param str String to convert
+ * @return vector of timeslots
+ */
 vector<ts> str_to_ts(string str)
 {
 	string new_str;
@@ -230,6 +325,12 @@ vector<ts> str_to_ts(string str)
 	return tss;
 }
 
+/**
+ * Converts vector of timeslots to string.
+ * 
+ * @param tss vector of timeslots to convert
+ * @return string representing all timeslots
+ */
 string ts_to_str(vector<ts> tss)
 {
 	int n = tss.size();
@@ -247,6 +348,13 @@ string ts_to_str(vector<ts> tss)
 	return str;
 }
 
+/**
+ * Finds intersections between two lists of timeslots (representing in string)
+ * 
+ * @param avals1 first list of timeslots
+ * @param avals2 second list of timeslots
+ * @return intersections between two lists (representing in string)
+ */
 string find_intxn(string avals1, string avals2)
 {
 	vector<ts> intxns;
@@ -265,6 +373,12 @@ string find_intxn(string avals1, string avals2)
 	return ts_to_str(intxns);
 }
 
+/**
+ * Finds intersections between multiple lists of timeslots (representing in string)
+ * 
+ * @param avals Multiple lists of timeslots
+ * @return intersections among these lists (representing in string)
+ */
 string find_intxn(vector<string> avals)
 {
 	int n = avals.size();
@@ -278,6 +392,13 @@ string find_intxn(vector<string> avals)
 	return tmp;
 }
 
+/**
+ * Checks if a timeslot is within user's availabilities
+ * 
+ * @param a Timeslot to check
+ * @param tss User's availabilities
+ * @return true if timeslot is valid, otherwise false
+ */
 bool is_valid_ts(ts a, vector<ts> tss)
 {
 	int min_start = a.start, max_end = a.end;
@@ -290,6 +411,14 @@ bool is_valid_ts(ts a, vector<ts> tss)
 	return false;
 }
 
+/**
+ * Registers meeting time and updates availabilities for a list of users
+ * 
+ * @param avals Multiple lists of timeslots
+ * @param users List of users to update
+ * @param mtg_time Meeting time to register
+ * @return updated availabilities
+ */
 map<string, string> update_avals(map<string, string> avals, vector<string> usrs, string mtg_time)
 {
 	// if meeting time is empty, then we don't need to update availability table

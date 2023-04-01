@@ -34,7 +34,7 @@ const int PORT_SERVERA = 21092;
 const int PORT_SERVERB = 22092;
 
 /**
- * Initialize TCP socket at server side.
+ * Initializes TCP socket at server side.
  * 
  * @param ip_addr IP address of server
  * @param port_num Port number of server

@@ -31,7 +31,7 @@ const int SERVERA_PORT = 21092;
 const string SERVER_ID = "A";
 
 /**
- * Read input file and store users' availabilities in a map
+ * Reads input file and stores users' availabilities in a map
  * 
  * @return a map contains users' availabilities with username as key and availability (string) as value
  */

@@ -20,7 +20,7 @@ int init_udp_sock(string ip_addr, int port_num);
 struct sockaddr_in init_dest_addr_udp(string ip_addr, int port_num);
 void send_msg_udp(int sock_fd, struct sockaddr_in addr_dest, string msg);
 
-int acpt_tcp_conn(int sock_fd_loc);
+int acpt_tcp_conn(int sock_fd);
 // vector<string> recv_msg_tcp(int sock_fd);
 void send_msg_tcp(int sock_fd, string msg);
 

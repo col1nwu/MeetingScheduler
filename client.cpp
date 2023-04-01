@@ -25,7 +25,7 @@ const string IP_ADDR = "127.0.0.1";
 const int PORT_TCP = 24092;
 
 /**
- * Initialize TCP socket at client side.
+ * Initializes TCP socket at client side.
  * 
  * @param ip_addr IP address of client
  * @param port_num Port number of client
@@ -47,7 +47,7 @@ int init_tcp_sock(string ip_addr, int port_num)
 }
 
 /**
- * Retrieve TCP port number at client side.
+ * Retrieves TCP port number at client side.
  * 
  * @param sock_fd Socket descriptor of TCP at client side
  * @return dynamically assigned port number of TCP at client side
