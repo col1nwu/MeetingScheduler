@@ -52,6 +52,7 @@ int init_tcp_sock(string ip_addr, int port_num)
 
 	bind(sock_fd, (struct sockaddr *) &addr, sizeof(addr));
 
+	// allow one TCP connection at a time
 	listen(sock_fd, 1);
 
 	return sock_fd;

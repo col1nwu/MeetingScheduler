@@ -126,12 +126,12 @@ void send_msg_udp(int sock_fd, struct sockaddr_in addr_dest, string msg)
  * @param sock_fd Socket descriptor of TCP socket
  * @return socket descriptor of child TCP process
  */
-int acpt_tcp_conn(int sock_fd)
+int acpt_tcp_conn(int sock_fd_loc)
 {
 	struct sockaddr_in addr_rmt;
 	socklen_t len_rmt = sizeof(addr_rmt);
 	
-	int sock_fd = accept(sock_fd, (struct sockaddr *) &addr_rmt, &len_rmt);
+	int sock_fd = accept(sock_fd_loc, (struct sockaddr *) &addr_rmt, &len_rmt);
 
 	return sock_fd;
 }
