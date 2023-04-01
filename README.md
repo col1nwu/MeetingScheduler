@@ -16,7 +16,7 @@ This project must be run on **Ubuntu 22.04 ARM64 systems**.
 
 ## Accomplishments
 
-This meeting scheduler can perform both **basic** and **bonus functionalities**.
+This meeting scheduler can perform both **basic** and **bonus** functionalities.
 In other words, it is able to find the intersection of time intervals for a list of users requested by
 the client; it is also able to register a meeting time for them.
 
