@@ -1,12 +1,26 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+/**
+ * @file utils.h
+ * This is header file for utils.cpp. Other files can include this header to use utility functions.
+ * 
+ * @date April 23, 2023
+ * @author Colin Wu, daizongw@usc.edu
+ */ 
+
 #include <map>
 #include <set>
 #include <string>
 #include <vector>
 
 using namespace std;
+
+/*
+-------------------------------------------------
+  Utility functions for TCP and UDP connections
+-------------------------------------------------
+*/
 
 struct recv_struct
 {
@@ -30,6 +44,11 @@ string vec_to_str(vector<string> strs, string x);
 set<string> vec_to_set(vector<string> strs);
 string ext_str(string str, string start_wrd, string end_wrd);
 
+/*
+-------------------------------------------------
+        Interval Intersection Alogorithm
+-------------------------------------------------
+*/
 
 struct ts
 {
