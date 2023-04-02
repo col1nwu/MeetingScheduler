@@ -21,14 +21,14 @@ This meeting scheduler can perform both **basic** and **bonus** functionalities.
 
 ## File Descriptions
 
-- client.cpp: implementation of Client
-- Makefile: building and compiling instruction of this project
-- serverM.cpp: implementation of Main Server
-- serverA.cpp: implementation of Backend Server A
-- serverB.cpp: implementation of Backend Server B
-- utils.cpp: implementation of a list of utility functions
-- utils.h: header file of utils.cpp
-- README.md: provides an introduction and overview of this project
+- `client.cpp`: implementation of Client
+- `Makefile`: building and compiling instruction of this project
+- `serverM.cpp`: implementation of Main Server
+- `serverA.cpp`: implementation of Backend Server A
+- `serverB.cpp`: implementation of Backend Server B
+- `utils.cpp`: implementation of a list of utility functions
+- `utils.h`: header file of utils.cpp
+- `README.md`: provides an introduction and overview of this project
 
 
 ## Message Format
