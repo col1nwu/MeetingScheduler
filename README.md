@@ -34,9 +34,9 @@ This meeting scheduler can perform both **basic** and **bonus** functionalities.
 ## Message Format
 
 - A list of availabilities is formatted as `[[a,b],[c,d]]`.
-- Availability is sometimes formatted as `[a,b]`. This is rarely used though - only used when client enters a meeting time for all users.
-- Usernames are separated by comma in internal communications, like `a,b,c`.
+- Meeting time is formatted as `[a,b]`. It is only used in the bonus part.
 - Usernames are separated by comma and space in output, like `a, b, c`, for better readability.
+- Usernames are separated by comma in internal communications, like `a,b,c`.
 
 
 ## Reference

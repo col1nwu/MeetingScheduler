@@ -64,6 +64,8 @@ int main(int argc, char *argv[])
 {
 	// initialize TCP connection between Client and Main Server
 	int sock_fd = init_tcp_sock(IP_ADDR, PORT_TCP);
+
+	// retrieve dynamically assigned TCP port number
 	int port = get_tcp_port(sock_fd);
 
 	cout << "Client is up and running." << endl;

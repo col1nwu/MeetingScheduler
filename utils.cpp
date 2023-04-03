@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <arpa/inet.h>
+#include <cctype>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -52,6 +53,13 @@ recv_struct recv_msg(int sock_fd)
 	else if (len_resp < 0) cout << "Error in receiving message..." << endl;
 
 	return {"", -1};
+}
+
+void close_sock(int sig, int sock_fd)
+{
+	cout << "Closing..." << endl;
+	close(sock_fd);
+	exit(0);
 }
 
 /*
@@ -310,9 +318,8 @@ vector<ts> str_to_ts(string str)
 	string nums_str;
 	for (char a : new_str)
 	{
-		if (a == '[' || a == ']') continue;
-		if (a == ',') nums_str += ' ';
-		else nums_str += a;
+		if (isdigit(a)) nums_str += a;
+		else if (a == ',') nums_str += ' ';
 	}
 	vector<string> nums = split_str(nums_str, " ");
 	vector<ts> tss;
@@ -337,14 +344,14 @@ string ts_to_str(vector<ts> tss)
 	string str = "[";
 	for (int i = 0; i < n; i++)
 	{
-		str += "[";
+		str += '[';
 		str += to_string(tss[i].start);
-		str += ",";
+		str += ',';
 		str += to_string(tss[i].end);
-		str += "]";
-		if (i < n - 1) str += ",";
+		str += ']';
+		if (i < n - 1) str += ',';
 	}
-	str += "]";
+	str += ']';
 	return str;
 }
 

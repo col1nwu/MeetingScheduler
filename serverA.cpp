@@ -124,5 +124,7 @@ int main(int argc, char *argv[])
 		send_msg_udp(sock_fd, addr_serverM, "Registration completed!");
 	}
 
+	close(sock_fd);
+
 	return 0;
 }

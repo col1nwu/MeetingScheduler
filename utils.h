@@ -29,6 +29,7 @@ struct recv_struct
 };
 
 recv_struct recv_msg(int sock_fd);
+void close_sock(int sig, int sock_fd);
 
 int init_udp_sock(string ip_addr, int port_num);
 struct sockaddr_in init_dest_addr_udp(string ip_addr, int port_num);
