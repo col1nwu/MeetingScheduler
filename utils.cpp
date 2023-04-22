@@ -409,6 +409,7 @@ string find_intxn(vector<string> avals)
 bool is_valid_ts(ts a, vector<ts> tss)
 {
 	int min_start = a.start, max_end = a.end;
+	if (min_start >= max_end) return false;
 	for (ts intvl : tss)
 	{
 		if (intvl.start > min_start) return false;
