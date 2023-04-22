@@ -41,6 +41,7 @@ This meeting scheduler can perform both **basic** and **bonus** functionalities.
 
 ## Reference
 
+- [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/)
 - Solutions of [Leetcode 56](https://leetcode.com/problems/merge-intervals/)
 - Solutions of [Leetcode 57](https://leetcode.com/problems/insert-interval/)
 - Solutions of [Leetcode 986](https://leetcode.com/problems/interval-list-intersections/)
