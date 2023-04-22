@@ -16,7 +16,7 @@ This project must be run on **Ubuntu 22.04 ARM64 systems**.
 
 ## Accomplishments
 
-This meeting scheduler can perform both **basic** and **bonus** functionalities. In other words, it is able to find the intersection of time intervals for a list of users requested by the client; it is also able to register a meeting time for them.
+This meeting scheduler can perform both **basic** and **bonus** functionalities. In other words, it is able to find the intersection of time intervals for a list of users requested by the client; it is also able to register a meeting time for them (i.e., remove meeting time from users' availabilities).
 
 
 ## File Descriptions
@@ -28,7 +28,7 @@ This meeting scheduler can perform both **basic** and **bonus** functionalities.
 - `serverB.cpp`: implementation of Backend Server B
 - `utils.cpp`: implementation of a list of utility functions
 - `utils.h`: header file of utils.cpp
-- `README.md`: provides an introduction and overview of this project
+- `README.md`: introduction and overview of this project
 
 
 ## Message Format
