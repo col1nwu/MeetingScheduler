@@ -11,7 +11,8 @@ April 23, 2023
 
 ## Idiosyncrasy
 
-This project must be run on **Ubuntu 22.04 ARM64 systems**.
+- This project must be run on **Ubuntu 22.04 ARM64 systems**.
+- You can, though it is not recommended, enter empty meeting time for the bonus part, which must be formatted as `[]`. See "Message Format" section for more details.
 
 
 ## Accomplishments
@@ -34,7 +35,7 @@ This meeting scheduler can perform both **basic** and **bonus** functionalities.
 ## Message Format
 
 - A list of availabilities is formatted as `[[a,b],[c,d]]`.
-- Meeting time is formatted as `[a,b]`. It is only used in the bonus part.
+- For the bonus part, meeting time is formatted as `[a,b]`. If you would like to enter an empty meeting time, you must enter it as `[]`, otherwise the program can fail.
 - Usernames are separated by comma and space in output, like `a, b, c`, for better readability.
 - Usernames are separated by comma in internal communications, like `a,b,c`.
 
