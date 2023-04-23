@@ -100,6 +100,8 @@ int main(int argc, char *argv[])
 			cout << "Client received the reply from Main Server using TCP over port " << port << ":" << endl;
 			cout << msg << " do not exist." << endl;
 			msg = recv_msg(sock_fd).msg;
+
+			if (msg == "Start new request") continue;
 		}
 		cout << "Client received the reply from Main Server using TCP over port " << port << ":" << endl;
 		cout << msg << "." << endl;
