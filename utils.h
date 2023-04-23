@@ -38,6 +38,7 @@ void send_msg_udp(int sock_fd, struct sockaddr_in addr_dest, string msg);
 int acpt_tcp_conn(int sock_fd_loc);
 void send_msg_tcp(int sock_fd, string msg);
 
+string rmv_space(string str);
 vector<string> split_str(string str, string x);
 string map_to_str(map<string, string> map);
 map<string, string> str_to_map(string str);
@@ -58,6 +59,7 @@ struct ts
 };
 
 vector<ts> str_to_ts(string str);
+string ts_to_str(vector<ts> tss);
 string find_intxn(string avals1, string avals2);
 string find_intxn(vector<string> avals);
 bool is_valid_ts(ts a, vector<ts> tss);

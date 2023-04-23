@@ -162,6 +162,16 @@ void send_msg_tcp(int sock_fd, string msg)
 -------------------------------------------------
 */
 
+string rmv_space(string str)
+{
+	string new_str;
+	for (char a : str)
+	{
+		if (a != ' ') new_str += a;
+	}
+	return new_str;
+}
+
 /**
  * Splits string by delimiter
  * 
@@ -282,7 +292,8 @@ string ext_str(string str, string start_wrd, string end_wrd)
 		
 		return str.substr(start_i);
 	}
-	else {
+	else
+	{
 		size_t start_i = str.find(start_wrd);
 		size_t end_i = str.find(end_wrd);
 
@@ -309,11 +320,7 @@ string ext_str(string str, string start_wrd, string end_wrd)
  */
 vector<ts> str_to_ts(string str)
 {
-	string new_str;
-	for (char a : str)
-	{
-		if (a != ' ') new_str += a;
-	}
+	string new_str = rmv_space(str);
 
 	string nums_str;
 	for (char a : new_str)

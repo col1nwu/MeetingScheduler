@@ -127,6 +127,7 @@ int main(int argc, char *argv[])
 		cout << "Please enter the final meeting time to register a meeting:" << endl;
 		string mtg_time;
 		getline(cin, mtg_time);
+		mtg_time = rmv_space(mtg_time);
 		vector<ts> inp_ts = str_to_ts(mtg_time);
 
 		// check if entered meeting time is valid; if not, prompt again
@@ -142,6 +143,7 @@ int main(int argc, char *argv[])
 				
 				inp_ts = str_to_ts(mtg_time);
 				is_valid_time = is_valid_ts(inp_ts[0], aval_ts);
+				mtg_time = rmv_space(mtg_time);
 			}
 		}
 		else mtg_time = "[]";
