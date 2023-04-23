@@ -95,14 +95,26 @@ int main(int argc, char *argv[])
 		// receive response from Main Server about intersections of all requested usernames
 		string msg = recv_msg(sock_fd).msg;
 		// if there are non-existing usernames, show this message; otherwise show intersections
+		size_t stop_sig;
 		if (msg[0] != 'T')
 		{
 			cout << "Client received the reply from Main Server using TCP over port " << port << ":" << endl;
-			cout << msg << " do not exist." << endl;
-			msg = recv_msg(sock_fd).msg;
 
-			if (msg == "Start new request") continue;
+			stop_sig = msg.find("Start new request");
+
+			cout << msg.substr(0, stop_sig) << " do not exist." << endl;
+
+			if (stop_sig != string::npos)
+			{
+				// start new request
+				cout << "[Customized output] Since all requested users cannot be found. Start a new request instead" << endl;
+				cout << "-----Start a new request-----" << endl;
+				continue;
+			}
+
+			msg = recv_msg(sock_fd).msg;
 		}
+
 		cout << "Client received the reply from Main Server using TCP over port " << port << ":" << endl;
 		cout << msg << "." << endl;
 

@@ -115,14 +115,13 @@ int main(int argc, char *argv[])
 			{
 				string not_fnd_usrs = vec_to_str(not_fnd, ", ");
 				cout << not_fnd_usrs << " do not exist. Send a reply to the client." << endl;
-
-				if (not_fnd.size() == usrs.size())
-				{
-					send_msg_tcp(sockfd_rmt, "Start new request");
-					continue;
-				}
-
 				send_msg_tcp(sockfd_rmt, not_fnd_usrs);
+			}
+
+			if (not_fnd.size() == usrs.size())
+			{
+				send_msg_tcp(sockfd_rmt, "Start new request");
+				continue;
 			}
 
 			// contact backend servers if users are found in that server
