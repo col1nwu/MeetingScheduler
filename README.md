@@ -12,6 +12,8 @@ April 23, 2023
 ## Idiosyncrasy
 
 - This project must be run on **Ubuntu 22.04 ARM64 systems**.
+- When Main Server detects all valid usernames are located in one of the Backend Servers, it will contact that specific server **only**. The other server will not be contacted in this case.
+- The program can handle duplicate usernames, but it is not recommended to have duplicate usernames in input as there are chances that the program behaves oddly in this scenario.
 - You can, though it is not recommended, enter empty meeting time for the bonus part, which must be formatted as `[]`. See "Message Format" section for more details.
 
 
@@ -38,6 +40,7 @@ This meeting scheduler can perform both **basic** and **bonus** functionalities.
 - For the bonus part, meeting time is formatted as `[a,b]`. If you would like to enter an empty meeting time, you must enter it as `[]`, otherwise the program can fail.
 - Usernames are separated by comma and space in output, like `a, b, c`, for better readability.
 - Usernames are separated by comma in internal communications, like `a,b,c`.
+- Customized output may be displayed, because some edge cases are not introduced in handout. They are displayed to help users understand the program behaviors. Customized output will always be marked as `[Customized output]` at the beginning.
 
 
 ## Reference
