@@ -137,6 +137,9 @@ int main(int argc, char *argv[])
 			{
 				cout << "Time interval " << mtg_time << " is not valid. Please enter again:" << endl;
 				getline(cin, mtg_time);
+
+				if (mtg_time == "[]") break;
+				
 				inp_ts = str_to_ts(mtg_time);
 				is_valid_time = is_valid_ts(inp_ts[0], aval_ts);
 			}
