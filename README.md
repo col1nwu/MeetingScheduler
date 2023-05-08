@@ -2,13 +2,6 @@
 
 **EE450 Socket Programming Project**
 
-Name: Daizong (Colin) Wu
-
-Student ID: 8443173092
-
-April 23, 2023
-
-
 ## Idiosyncrasy
 
 - This project must be run on **Ubuntu 22.04 ARM64 systems**.
